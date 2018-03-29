@@ -20,9 +20,12 @@ class List {
 private:
     Node *head;
 
+    //TODO : Est-ce une bonne idée de stocker la taille ?
+    size_t size;
+
     class Node {
     public:
-        Node(string element, Node *next, Node *before);
+        Node(const string& element, Node *next, Node *before);
 
     private:
         string element;
@@ -75,7 +78,7 @@ public:
     /**
      * @return le nombre d’éléments de la liste,
      */
-    size_t size();
+    size_t size() const;
 
     /**
      * Insère un élément au début de la list
@@ -102,6 +105,24 @@ public:
      */
     void remove(const string& o);
 
+    /**
+     * Recherche un élément dans la liste et rendant l’indice du
+     * premier élément correspondant dans la liste ou, sinon, -1
+     *
+     * @param o : Élément de la liste à chercher
+     * @return l’indice du
+     * premier élément correspondant dans la liste ou, sinon, -1
+     */
+    size_t find(const string& o) const;
+
+    /**
+     *  Affichage dans un flux de la liste et de son contenu.
+     *
+     * @param out : flux dans lequel afficher la liste et son contenu
+     * @param l : Élément à afficher
+     * @return le flux dans lequel afficher la liste et son contenu
+     */
+    friend std::ostream& operator<<(std::ostream& out, const List& l) const;
 };
 
 
