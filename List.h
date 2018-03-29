@@ -26,9 +26,9 @@ private:
 
     class Node {
     public:
-        Node(const string& element, Node *next, Node *before);
+        Node(const string &element, Node *next, Node *before);
 
-        Node(const string& element);
+        Node(const string &element);
 
     private:
         string element;
@@ -63,7 +63,7 @@ public:
     * @param other   : List à affecter
     * @return la List affectée
     */
-    List& operator=(const List& other);
+    List &operator=(const List &other);
 
     /**
      * Accès à un élément de la liste
@@ -72,7 +72,7 @@ public:
      * @param i : indice de l'élément désiré
      * @return  : le ième élément
      */
-    string operator[](size_t i) const throw (std::out_of_range);
+    string operator[](size_t i) const throw(std::out_of_range);
 
     /**
      * Accès à un élément modifiable de la liste
@@ -81,7 +81,7 @@ public:
      * @param i : indice de l'élément désiré
      * @return  : le ième élément
      */
-    string& operator[](size_t i) throw (std::out_of_range);
+    string &operator[](size_t i) throw(std::out_of_range);
 
     /**
      * @return le nombre d’éléments de la liste,
@@ -92,13 +92,13 @@ public:
      * Insère un élément au début de la list
      * @param o : élément à inserer à la début de la List
      */
-    void insert(const string& o);
+    void insert(const string &o);
 
     /**
      * Insère un élément à la fin de la List
      * @param o : élément à inserer à la fin de la List
      */
-    void append(const string& o);
+    void append(const string &o);
 
     /**
      * Supprime l'élément à l'index donné
@@ -111,7 +111,7 @@ public:
      * Supprime l'élément donné, s'il est dans la List
      * @param o : élément à supprimer
      */
-    void remove(const string& o);
+    void remove(const string &o);
 
     /**
      * Recherche un élément dans la liste et rendant l’indice du
@@ -121,7 +121,7 @@ public:
      * @return l’indice du
      * premier élément correspondant dans la liste ou, sinon, -1
      */
-    size_t find(const string& o) const;
+    size_t find(const string &o) const;
 
     /**
      *  Affichage dans un flux de la liste et de son contenu.
@@ -130,7 +130,7 @@ public:
      * @param l : Élément à afficher
      * @return le flux dans lequel afficher la liste et son contenu
      */
-    friend std::ostream& operator<<(std::ostream& out, const List& l) const;
+    friend std::ostream &operator<<(std::ostream &out, const List &l) const;
 };
 
 

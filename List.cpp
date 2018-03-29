@@ -4,7 +4,7 @@
 
 #include "List.h"
 
-List::Node::Node(const string& element, Node *next, Node *before) : element(element), next(next), before(before) {}
+List::Node::Node(const string &element, Node *next, Node *before) : element(element), next(next), before(before) {}
 
 List::Node::Node(const string &element) : element(element), next(nullptr), before(nullptr) {}
 
@@ -44,7 +44,7 @@ void List::insert(const string &o) {
 void List::append(const string &o) {
     //TODO
 
-    if(length == 0){
+    if (length == 0) {
         head = new Node(o, nullptr, nullptr);
     } else {
 
