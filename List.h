@@ -20,6 +20,7 @@ class List {
 private:
     Node *head;
 
+
     //TODO : Est-ce une bonne idée de stocker la taille ?
     size_t length;
 
@@ -36,6 +37,11 @@ private:
     };
 
 public:
+
+    /**
+     * TODO : Je sais que tu m'avais dit qu'il ne fallait jamais faire les
+     *  Signatures en avance, mais là se sont celles qui sont demandées
+     */
 
     /**
      * Constructeur sans paramètre
