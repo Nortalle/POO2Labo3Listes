@@ -9,6 +9,11 @@ List::Node::Node(int element, Node *next, Node *before) : element(element), next
 
 List::List() {}
 
+
+List::List(const List &list) {
+
+}
+
 void List::append(const string string) {
 
     if(head == nullptr){
