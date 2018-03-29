@@ -21,11 +21,13 @@ private:
     Node *head;
 
     //TODO : Est-ce une bonne idée de stocker la taille ?
-    size_t size;
+    size_t length;
 
     class Node {
     public:
         Node(const string& element, Node *next, Node *before);
+
+        Node(const string& element);
 
     private:
         string element;

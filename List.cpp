@@ -6,9 +6,9 @@
 
 List::Node::Node(const string& element, Node *next, Node *before) : element(element), next(next), before(before) {}
 
+List::Node::Node(const string &element) : element(element), next(nullptr), before(nullptr) {}
 
-List::List() : head(nullptr), size(0) {}
-
+List::List() : head(nullptr), length(0) {}
 
 List::List(const List &list) {
     //TODO
@@ -34,7 +34,7 @@ string &List::operator[](size_t i) {
 
 size_t List::size() const {
 
-    return size;
+    return length;
 }
 
 void List::insert(const string &o) {
@@ -44,12 +44,12 @@ void List::insert(const string &o) {
 void List::append(const string &o) {
     //TODO
 
-    if(size == 0){
+    if(length == 0){
         head = new Node(o, nullptr, nullptr);
     } else {
 
     }
-    size++;
+    length++;
 }
 
 void List::removeAt(size_t index) {
