@@ -18,14 +18,37 @@ using namespace std;
 
 int main() {
     List l;
+
+    /**
+     * Test append
+     */
     l.append("un");
     l.append("deux");
     l.append("trois");
+
+    cout << l << endl;
+
+    /**
+     * Test append
+     */
     l.insert("quatre");
     l.insert("cinq");
     l.insert("six");
 
-    cout << l;
+    cout << l << endl;
+
+    /**
+     * Test find
+     */
+
+    cout << l.find("six") << endl;
+    cout << l.find("cinq") << endl;
+    cout << l.find("quatre") << endl;
+    cout << l.find("un") << endl;
+    cout << l.find("deux") << endl;
+    cout << l.find("trois") << endl;
+    cout << l.find("nicolas") << endl;
+
     /*
     for (List::Iterator it = l.begin(); it != l.end(); ++it)
         cout << *it << " ";

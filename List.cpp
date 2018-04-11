@@ -8,6 +8,8 @@
  Goal        :
 
  Compiler    :
+
+ Source      : https://openclassrooms.com/courses/les-listes-doublement-chainees-en-langage-c
  ------------------------------------------------------------------------------
 */
 
@@ -106,31 +108,73 @@ void List::append(const string &o) {
 }
 
 void List::removeAt(size_t index) {
-    //TODO call find()
-
+/*
+    struct node *p_temp = p_list->p_head;
+    int i = 1;
+    while (p_temp != NULL && i <= position)
+    {
+        if (position == i)
+        {
+            if (p_temp->p_next == NULL)
+            {
+                p_list->p_tail = p_temp->p_prev;
+                p_list->p_tail->p_next = NULL;
+            }
+            else if (p_temp->p_prev == NULL)
+            {
+                p_list->p_head = p_temp->p_next;
+                p_list->p_head->p_prev = NULL;
+            }
+            else
+            {
+                p_temp->p_next->p_prev = p_temp->p_prev;
+                p_temp->p_prev->p_next = p_temp->p_next;
+            }
+            free(p_temp);
+            p_list->length--;
+        }
+        else
+        {
+            p_temp = p_temp->p_next;
+        }
+        i++;
+    }*/
     length--;
 }
 
 void List::remove(const string &o) {
-    //TODO
 
-    length--;
+    int index = find(o);
+    if(index != -1)
+        removeAt(index);
 }
 
-size_t List::find(const string &o) const {
-    //TODO
+int List::find(const string &o) const {
 
-    return 0;
+    Node *tmp = head;
+    int index = 0;
+
+    while (tmp != nullptr) {
+        if (tmp->element == o) {
+            return index;
+        } else {
+            tmp = tmp->next;
+        }
+        index++;
+    }
+
+
+    return -1;
 }
 
 std::ostream &operator<<(std::ostream &out, const List &l) {
 
     const string arrow = " -> ";
 
-    if(l.length != 0){
-        List::Node* tmp = l.head;
+    if (l.length != 0) {
+        List::Node *tmp = l.head;
 
-        while(tmp != nullptr){
+        while (tmp != nullptr) {
             out << arrow << tmp->element;
             tmp = tmp->next;
         }

@@ -20,6 +20,7 @@
 using namespace std;
 
 class Iterator;
+
 class ConstIterator;
 
 /**
@@ -33,7 +34,7 @@ private:
         string element;
         struct Node *previous;
         struct Node *next;
-    }Node;
+    } Node;
 
     Node *head;
     Node *tail; //TODO doublement chainé implique de stocker la fin de la liste ?
@@ -119,11 +120,14 @@ public:
      * Recherche un élément dans la liste et rendant l’indice du
      * premier élément correspondant dans la liste ou, sinon, -1
      *
+     * Renvoie un int pour envoyer -1 au cas où nous n'avons pas
+     * trouvé l'élément
+     *
      * @param o : Élément de la liste à chercher
      * @return l’indice du
      * premier élément correspondant dans la liste ou, sinon, -1
      */
-    size_t find(const string &o) const;
+    int find(const string &o) const;
 
     /**
      * @return an iterator placed at the beginning of the list
@@ -158,7 +162,7 @@ public:
         string &operator*();
     };
 
-    class ConstIterator : public Iterator{
+    class ConstIterator : public Iterator {
     private:
     public:
     };
