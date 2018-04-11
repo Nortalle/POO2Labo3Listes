@@ -9,7 +9,7 @@
 
  Compiler    :
 
- Source      : https://openclassrooms.com/courses/les-listes-doublement-chainees-en-langage-c
+ Source      :
  ------------------------------------------------------------------------------
 */
 
@@ -21,43 +21,27 @@ List<T>::List() : head(nullptr), tail(nullptr), length(0) {}
 template<class T>
 List<T>::List(const List &list) : length(list.length) {
 
-    //TODO pas finie et pas claire
-/*
-    if (list.length != 0) {
+    //TODO
 
-        Node *RhsIt = list.head;
-        Node *It = new Node(RhsIt->element, nullptr, nullptr);
-        head = It;
-        while ((RhsIt = RhsIt->next) != list.tail) {
-            try {
-                Node *Next = new Node(RhsIt->element, It, nullptr);
-                It = It->next = Next;
-            }
-            catch (std::bad_alloc &Exception) {
-                for (Node *Last; head != nullptr; delete Last) {
-                    Last = head;
-                    head = head->next;
-                }
-                throw ;
-            }
-        }
-        tail = It;
-    }*/
 }
 
 /*
+ *
+template<class T>
 List &List::operator=(const List &other) {
     List tmp;
 
     return tmp;
 }
 
+template<class T>
 T List::operator[](size_t i) const {
     //TODO
 
     return std::__cxx11::T();
 }
 
+template<class T>
 T &List::operator[](size_t i) {
     //TODO
     T tmp;
