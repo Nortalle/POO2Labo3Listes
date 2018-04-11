@@ -195,7 +195,9 @@ void List<T>::affiche() const {
 }
 
 template
-class List<string>;
+class List<string>; //nécessaire pour que string fonctionnent en générique
+template
+class List<int>; //nécessaire pour que les int fonctionnent en générique
 
 
 

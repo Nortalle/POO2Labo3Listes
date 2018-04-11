@@ -66,6 +66,55 @@ int main() {
     l.affiche();
     //cout << l << endl;
 
+    List<int> r;
+
+    /**
+     * Test append
+     */
+    r.append(1);
+    r.append(2);
+    r.append(3);
+
+    r.affiche();
+    //cout << l << endl;
+
+    /**
+     * Test append
+     */
+    r.insert(4);
+    r.insert(5);
+    r.insert(6);
+
+    r.affiche();
+    //cout << l << endl;
+
+    /**
+     * Test find
+     */
+
+    cout << r.find(6) << endl;
+    cout << r.find(5) << endl;
+    cout << r.find(4) << endl;
+    cout << r.find(1) << endl;
+    cout << r.find(2) << endl;
+    cout << r.find(3) << endl;
+    cout << r.find(69) << endl;
+
+    /**
+     * Test remove
+     */
+
+    r.remove(6);
+    r.remove(69);
+
+    r.affiche();
+
+    r.removeAt(3);
+
+    r.affiche();
+    //cout << l << endl;
+
+
     /*
     for (List::Iterator it = l.begin(); it != l.end(); ++it)
         cout << *it << " ";
