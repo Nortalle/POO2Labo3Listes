@@ -10,8 +10,29 @@ List::Node::Node(const string &element) : element(element), next(nullptr), befor
 
 List::List() : head(nullptr), length(0) {}
 
-List::List(const List &list) {
-    //TODO
+List::List(const List &list) : length(list.length) {
+
+    //TODO pas finie et pas claire
+
+    if (list.length != 0) {
+        Node *RhsIt = list.head;
+        Node *It = new Node(RhsIt->element, nullptr, nullptr);
+        head = It;
+        while ((RhsIt = RhsIt->next) != list.tail) {
+            try {
+                Node *Next = new Node(RhsIt->element, It, nullptr);
+                It = It->next = Next;
+            }
+            catch (std::bad_alloc &Exception) {
+                for (Node *Last; head != nullptr; delete Last) {
+                    Last = head;
+                    head = head->next;
+                }
+                throw ;
+            }
+        }
+        tail = It;
+    }
 }
 
 List &List::operator=(const List &other) {
@@ -38,16 +59,35 @@ size_t List::size() const {
 }
 
 void List::insert(const string &o) {
-    //TODO
+
+    if (o == nullptr) {
+        //TODO Lancer une exception
+    }
+
+    if (length == 0) {
+        head = new Node(o);
+        tail = head;
+    } else {
+        Node *tmp = new Node(o);
+
+        tmp->next = head;
+        tmp->next->before = tmp;
+
+        head = tmp;
+    }
+    length++;
 }
 
 void List::append(const string &o) {
     //TODO
 
     if (length == 0) {
-        head = new Node(o, nullptr, nullptr);
+        head = new Node(o);
+        tail = head;
     } else {
-
+        tail->next = new Node(o);
+        tail->next->before = tail;
+        tail = tail->next;
     }
     length++;
 }
@@ -69,7 +109,7 @@ size_t List::find(const string &o) const {
 }
 
 std::ostream &operator<<(std::ostream &out, const List &l) const {
-    //TODO
+
 
     return <#initializer#>;
 }

@@ -19,7 +19,7 @@ class Node;
 class List {
 private:
     Node *head;
-
+    Node *tail;
 
     //TODO : Est-ce une bonne idée de stocker la taille ?
     size_t length;
@@ -30,10 +30,10 @@ private:
 
         Node(const string &element);
 
-    private:
+        Node *before;
         string element;
         Node *next;
-        Node *before;
+    private:
     };
 
 public:
