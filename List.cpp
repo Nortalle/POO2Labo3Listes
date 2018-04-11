@@ -1,20 +1,26 @@
-//
-// Created by Nortalle on 29.03.2018.
-//
+/*
+ ------------------------------------------------------------------------------
+ Labo        : 3
+ File        : List.cpp
+ Author(s)   : Guillaume Hochet et Vincent Guidoux
+ Date        : 25.04.2018
+
+ Goal        :
+
+ Compiler    :
+ ------------------------------------------------------------------------------
+*/
 
 #include "List.h"
 
-List::Node::Node(const string &element, Node *next, Node *before) : element(element), next(next), before(before) {}
-
-List::Node::Node(const string &element) : element(element), next(nullptr), before(nullptr) {}
-
-List::List() : head(nullptr), length(0) {}
+List::List() : head(nullptr), tail(nullptr), length(0) {}
 
 List::List(const List &list) : length(list.length) {
 
     //TODO pas finie et pas claire
-
+/*
     if (list.length != 0) {
+
         Node *RhsIt = list.head;
         Node *It = new Node(RhsIt->element, nullptr, nullptr);
         head = It;
@@ -32,13 +38,14 @@ List::List(const List &list) : length(list.length) {
             }
         }
         tail = It;
-    }
+    }*/
 }
 
+/*
 List &List::operator=(const List &other) {
-    //TODO
+    List tmp;
 
-    return <#initializer#>;
+    return tmp;
 }
 
 string List::operator[](size_t i) const {
@@ -49,9 +56,10 @@ string List::operator[](size_t i) const {
 
 string &List::operator[](size_t i) {
     //TODO
+    string tmp;
 
-    return <#initializer#>;
-}
+    return tmp;
+}*/
 
 size_t List::size() const {
 
@@ -60,46 +68,53 @@ size_t List::size() const {
 
 void List::insert(const string &o) {
 
-    if (o == nullptr) {
-        //TODO Lancer une exception
-    }
+    Node *to_insert = new Node();
 
-    if (length == 0) {
-        head = new Node(o);
-        tail = head;
+    to_insert->element = o;
+    to_insert->previous = nullptr;
+
+    if (head == nullptr) {
+
+        to_insert->next = nullptr;
+        head = to_insert;
+        tail = to_insert;
     } else {
-        Node *tmp = new Node(o);
-
-        tmp->next = head;
-        tmp->next->before = tmp;
-
-        head = tmp;
+        head->previous = to_insert;
+        to_insert->next = head;
+        head = to_insert;
     }
+
     length++;
 }
 
 void List::append(const string &o) {
-    //TODO
+    Node *to_append = new Node();
 
-    if (length == 0) {
-        head = new Node(o);
-        tail = head;
+    to_append->element = o;
+    to_append->next = nullptr;
+
+    if (tail == nullptr) {
+        to_append->previous = nullptr;
+        head = to_append;
+        tail = to_append;
     } else {
-        tail->next = new Node(o);
-        tail->next->before = tail;
-        tail = tail->next;
+        tail->next = to_append;
+        to_append->previous = tail;
+        tail = to_append;
     }
     length++;
 }
 
 void List::removeAt(size_t index) {
-    //TODO
+    //TODO call find()
 
+    length--;
 }
 
 void List::remove(const string &o) {
     //TODO
 
+    length--;
 }
 
 size_t List::find(const string &o) const {
@@ -108,10 +123,20 @@ size_t List::find(const string &o) const {
     return 0;
 }
 
-std::ostream &operator<<(std::ostream &out, const List &l) const {
+std::ostream &operator<<(std::ostream &out, const List &l) {
 
+    const string arrow = " -> ";
 
-    return <#initializer#>;
+    if(l.length != 0){
+        List::Node* tmp = l.head;
+
+        while(tmp != nullptr){
+            out << arrow << tmp->element;
+            tmp = tmp->next;
+        }
+    }
+
+    return out;
 }
 
 

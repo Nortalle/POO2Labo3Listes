@@ -1,6 +1,15 @@
-//
-// Created by Nortalle on 29.03.2018.
-//
+/*
+ ------------------------------------------------------------------------------
+ Labo        : 3
+ File        : List.h
+ Author(s)   : Guillaume Hochet et Vincent Guidoux
+ Date        : 25.04.2018
+
+ Goal        :
+
+ Compiler    :
+ ------------------------------------------------------------------------------
+*/
 
 #ifndef POO2LABO3LISTES_LIST_H
 #define POO2LABO3LISTES_LIST_H
@@ -10,7 +19,8 @@
 
 using namespace std;
 
-class Node;
+class Iterator;
+class ConstIterator;
 
 /**
  * Classe générique doublement chaînée permettant de stocker des listes
@@ -18,30 +28,22 @@ class Node;
  */
 class List {
 private:
+
+    typedef struct Node {
+        string element;
+        struct Node *previous;
+        struct Node *next;
+    }Node;
+
     Node *head;
-    Node *tail;
+    Node *tail; //TODO doublement chainé implique de stocker la fin de la liste ?
 
     //TODO : Est-ce une bonne idée de stocker la taille ?
     size_t length;
 
-    class Node {
-    public:
-        Node(const string &element, Node *next, Node *before);
-
-        Node(const string &element);
-
-        Node *before;
-        string element;
-        Node *next;
-    private:
-    };
 
 public:
-
-    /**
-     * TODO : Je sais que tu m'avais dit qu'il ne fallait jamais faire les
-     *  Signatures en avance, mais là se sont celles qui sont demandées
-     */
+    //TODO: Je sais que tu m'avais dit qu'il ne fallait jamais faire les Signatures en avance, mais là se sont celles qui sont demandées
 
     /**
      * Constructeur sans paramètre
@@ -124,13 +126,51 @@ public:
     size_t find(const string &o) const;
 
     /**
+     * @return an iterator placed at the beginning of the list
+     */
+    Iterator begin();
+
+    /**
+     * @return an iterator placed at the end of the list
+     */
+    Iterator end();
+
+    /**
+     * @return an iterator placed at the beginning of the list
+     */
+    Iterator begin() const;
+
+    /**
+     * @return an iterator placed at the end of the list
+     */
+    Iterator end() const;
+
+
+    class Iterator {
+    private:
+    public:
+        Iterator &operator++();
+
+        bool operator==(const Iterator &o) const;
+
+        bool operator!=(const Iterator &o) const;
+
+        string &operator*();
+    };
+
+    class ConstIterator : public Iterator{
+    private:
+    public:
+    };
+
+    /**
      *  Affichage dans un flux de la liste et de son contenu.
      *
      * @param out : flux dans lequel afficher la liste et son contenu
      * @param l : Élément à afficher
      * @return le flux dans lequel afficher la liste et son contenu
      */
-    friend std::ostream &operator<<(std::ostream &out, const List &l) const;
+    friend std::ostream &operator<<(std::ostream &out, const List &l);
 };
 
 
