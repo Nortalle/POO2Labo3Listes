@@ -142,4 +142,5 @@ int main() {
     cout << endl;
 // Affichage: 14 3 42
 */
+    return EXIT_SUCCESS;
 }
