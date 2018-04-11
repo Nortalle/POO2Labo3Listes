@@ -22,6 +22,7 @@ class Iterator;
 
 class ConstIterator;
 
+
 /**
  * Classe générique doublement chaînée permettant de stocker des listes
  * d’objets ou de pointeurs sur des objets.
@@ -37,9 +38,8 @@ private:
     } Node;
 
     Node *head;
-    Node *tail; //TODO doublement chainé implique de stocker la fin de la liste ?
+    Node *tail;
 
-    //TODO : Est-ce une bonne idée de stocker la taille ?
     size_t length;
 
 
@@ -168,14 +168,22 @@ public:
     };
 
     /**
-     *  Affichage dans un flux de la liste et de son contenu.
+     *  Affichage dans un flux la liste et son contenu.
      *
      * @param out : flux dans lequel afficher la liste et son contenu
      * @param l : Élément à afficher
      * @return le flux dans lequel afficher la liste et son contenu
      */
-    template<class U>
-    friend std::ostream &operator<<(std::ostream &out, const List<U> &l);
+    template<typename U>
+    friend
+    std::ostream &operator<<(std::ostream &out, const List<U> &l);
+
+
+    /**
+     *  Affichela liste et son contenu.
+     *
+     */
+    void affiche() const;
 };
 
 

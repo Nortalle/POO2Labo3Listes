@@ -17,6 +17,7 @@
 using namespace std;
 
 int main() {
+
     List<string> l;
 
     /**
@@ -26,7 +27,8 @@ int main() {
     l.append("deux");
     l.append("trois");
 
-    cout << l << endl;
+    l.affiche();
+    //cout << l << endl;
 
     /**
      * Test append
@@ -35,7 +37,8 @@ int main() {
     l.insert("cinq");
     l.insert("six");
 
-    cout << l << endl;
+    l.affiche();
+    //cout << l << endl;
 
     /**
      * Test find
@@ -56,11 +59,12 @@ int main() {
     l.remove("six");
     l.remove("nicolas");
 
-    cout << l << endl;
+    l.affiche();
 
     l.removeAt(3);
 
-    cout << l << endl;
+    l.affiche();
+    //cout << l << endl;
 
     /*
     for (List::Iterator it = l.begin(); it != l.end(); ++it)

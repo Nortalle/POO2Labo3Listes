@@ -12,13 +12,13 @@
  Source      :
  ------------------------------------------------------------------------------
 */
-
+#include <iostream>
 #include "List.h"
 
-template<class T>
+template<typename T>
 List<T>::List() : head(nullptr), tail(nullptr), length(0) {}
 
-template<class T>
+template<typename T>
 List<T>::List(const List &list) : length(list.length) {
 
     //TODO
@@ -158,15 +158,14 @@ int List<T>::find(const T &o) const {
     return -1;
 }
 
-template<class U>
+/*
+template<typename U>
 std::ostream &operator<<(std::ostream &out, const List<U> &l) {
-
     const string arrow = " -> ";
 
-    List<U>::Node *tmp;
+    List<U>::Node *tmp = l.head;
 
     if (l.size() != 0) {
-        tmp = l.head;
 
         while (tmp != nullptr) {
             out << arrow << tmp->element;
@@ -176,8 +175,27 @@ std::ostream &operator<<(std::ostream &out, const List<U> &l) {
 
     return out;
 }
+*/
 
+template<typename T>
+void List<T>::affiche() const {
 
+    const string arrow = " -> ";
+
+    List<T>::Node *tmp = head;
+
+    if (size() != 0) {
+
+        while (tmp != nullptr) {
+            std::cout << arrow << tmp->element;
+            tmp = tmp->next;
+        }
+    }
+    std::endl(std::cout);
+}
+
+template
+class List<string>;
 
 
 
