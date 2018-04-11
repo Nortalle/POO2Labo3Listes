@@ -15,9 +15,11 @@
 
 #include "List.h"
 
-List::List() : head(nullptr), tail(nullptr), length(0) {}
+template<class T>
+List<T>::List() : head(nullptr), tail(nullptr), length(0) {}
 
-List::List(const List &list) : length(list.length) {
+template<class T>
+List<T>::List(const List &list) : length(list.length) {
 
     //TODO pas finie et pas claire
 /*
@@ -50,25 +52,28 @@ List &List::operator=(const List &other) {
     return tmp;
 }
 
-string List::operator[](size_t i) const {
+T List::operator[](size_t i) const {
     //TODO
 
-    return std::__cxx11::string();
+    return std::__cxx11::T();
 }
 
-string &List::operator[](size_t i) {
+T &List::operator[](size_t i) {
     //TODO
-    string tmp;
+    T tmp;
 
     return tmp;
 }*/
 
-size_t List::size() const {
+template<typename T>
+size_t List<T>::size() const {
 
     return length;
 }
 
-void List::insert(const string &o) {
+
+template<typename T>
+void List<T>::insert(const T &o) {
 
     Node *to_insert = new Node();
 
@@ -89,7 +94,8 @@ void List::insert(const string &o) {
     length++;
 }
 
-void List::append(const string &o) {
+template<typename T>
+void List<T>::append(const T &o) {
     Node *to_append = new Node();
 
     to_append->element = o;
@@ -107,49 +113,51 @@ void List::append(const string &o) {
     length++;
 }
 
-void List::removeAt(size_t index) {
-/*
-    struct node *p_temp = p_list->p_head;
-    int i = 1;
-    while (p_temp != NULL && i <= position)
-    {
-        if (position == i)
-        {
-            if (p_temp->p_next == NULL)
-            {
-                p_list->p_tail = p_temp->p_prev;
-                p_list->p_tail->p_next = NULL;
+template<typename T>
+void List<T>::removeAt(size_t index) {
+
+    if (0 <= index && index < length) {
+        Node *tmp = head;
+
+        int i = 0;
+
+        while (tmp != nullptr && i <= index) {
+
+            if (index == i) {
+                if (tmp->next == nullptr) {
+
+                    tail = tmp->previous;
+                    tail->next = nullptr;
+                } else if (tmp->previous == nullptr) {
+
+                    head = tmp->next;
+                    head->previous = nullptr;
+                } else {
+
+                    tmp->next->previous = tmp->previous;
+                    tmp->previous->next = tmp->next;
+                }
+                delete tmp;
+
+            } else {
+                tmp = tmp->next;
             }
-            else if (p_temp->p_prev == NULL)
-            {
-                p_list->p_head = p_temp->p_next;
-                p_list->p_head->p_prev = NULL;
-            }
-            else
-            {
-                p_temp->p_next->p_prev = p_temp->p_prev;
-                p_temp->p_prev->p_next = p_temp->p_next;
-            }
-            free(p_temp);
-            p_list->length--;
+            i++;
         }
-        else
-        {
-            p_temp = p_temp->p_next;
-        }
-        i++;
-    }*/
-    length--;
+        length--;
+    }
 }
 
-void List::remove(const string &o) {
+template<typename T>
+void List<T>::remove(const T &o) {
 
     int index = find(o);
-    if(index != -1)
+    if (index != -1)
         removeAt(index);
 }
 
-int List::find(const string &o) const {
+template<typename T>
+int List<T>::find(const T &o) const {
 
     Node *tmp = head;
     int index = 0;
@@ -163,16 +171,18 @@ int List::find(const string &o) const {
         index++;
     }
 
-
     return -1;
 }
 
-std::ostream &operator<<(std::ostream &out, const List &l) {
+template<class U>
+std::ostream &operator<<(std::ostream &out, const List<U> &l) {
 
     const string arrow = " -> ";
 
-    if (l.length != 0) {
-        List::Node *tmp = l.head;
+    List<U>::Node *tmp;
+
+    if (l.size() != 0) {
+        tmp = l.head;
 
         while (tmp != nullptr) {
             out << arrow << tmp->element;

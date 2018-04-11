@@ -17,7 +17,7 @@
 using namespace std;
 
 int main() {
-    List l;
+    List<string> l;
 
     /**
      * Test append
@@ -48,6 +48,19 @@ int main() {
     cout << l.find("deux") << endl;
     cout << l.find("trois") << endl;
     cout << l.find("nicolas") << endl;
+
+    /**
+     * Test remove
+     */
+
+    l.remove("six");
+    l.remove("nicolas");
+
+    cout << l << endl;
+
+    l.removeAt(3);
+
+    cout << l << endl;
 
     /*
     for (List::Iterator it = l.begin(); it != l.end(); ++it)
