@@ -3,4 +3,4 @@ project(POO2Labo3Listes)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(POO2Labo3Listes main.cpp List.cpp List.h)
+add_executable(POO2Labo3Listes main.cpp List.h Person.h Student.h)

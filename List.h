@@ -18,11 +18,6 @@
 
 using namespace std;
 
-class Iterator;
-
-class ConstIterator;
-
-
 /**
  * Classe générique doublement chaînée permettant de stocker des listes
  * d’objets ou de pointeurs sur des objets.
@@ -31,42 +26,135 @@ template<typename T>
 class List {
 private:
 
-    typedef struct Node {
-        T element;
-        struct Node *previous;
-        struct Node *next;
-    } Node;
+    struct Node {
+        Node *previous;
+        Node *next;
 
-    Node *head;
-    Node *tail;
+    };
+
+    struct DataNode : Node {
+        T element;
+
+        DataNode() : element(T()) {
+        }
+    };
+
+    DataNode *head;
+    DataNode *tail;
 
     size_t length;
 
+    //used for --begin() and end()
+    Node *sentinal;
+
+    /**
+     * Supprimme tous les éléments de la liste
+     */
+    void removeAll() {
+        while (length != 0) {
+            removeAt(0);
+        }
+
+    }
+
+    /**
+     * Concatène une liste avec celle donnée en paramètre
+     *
+     * @param list : liste à rajouter à la fin de la liste actuelle
+     */
+    void appendList(const List &list) {
+        for (Iterator it = list.begin(); it != list.end(); ++it)
+            append(*it);
+    }
+
+    void firstAdd(DataNode *to_add) {
+        head = to_add;
+
+        head->next = sentinal;
+        head->previous = sentinal;
+
+        sentinal->next = head;
+        sentinal->previous = head;
+
+        tail = head;
+    }
+
+    /**
+     * Valide si l'index passé en paramètre ne sort pas de la liste
+     * @param i : index à vérifier
+     */
+    void validIndex(size_t i) const throw(std::out_of_range) {
+        if (i >= length) {
+            throw std::out_of_range("out of range");
+        }
+    }
+
+
+    T at(size_t i){
+        Iterator tmp = begin();
+        int index = 0;
+
+        while (tmp != nullptr) {
+            if (index == i) {
+                return *tmp;
+            }
+            ++tmp;
+
+            index++;
+        }
+        return -1;
+    }
 
 public:
-    //TODO: Je sais que tu m'avais dit qu'il ne fallait jamais faire les Signatures en avance, mais là se sont celles qui sont demandées
-
     /**
      * Constructeur sans paramètre
      */
-    List();
+    List() : sentinal(new Node), length(0) {
+        head = (reinterpret_cast<DataNode *>(sentinal));
+        tail = (reinterpret_cast<DataNode *>(sentinal));
+    }
 
-    //TODO: Constructeur avec une liste d’initialiseurs
 
     /**
      * Constructeur de copie
      *
      * @param list : list à copier dans le nouvel élément
      */
-    List(const List &list);
+    explicit List(const List &list) : List() {
 
+        appendList(list);
+    }
+
+    /**
+     * Constructeur avec une liste d’initialiseurs
+     *
+     * @param args : liste d'initialisateurs
+     */
+    List(std::initializer_list<T> args) : List() {
+
+        for (const T *val = args.begin(); val != args.end(); ++val) {
+            append(*val);
+        }
+    }
+/*
+    ~List() {
+        removeAll();
+        delete sentinal;
+    }
+*/
     /**
     * Opréateur d'affectation
     *
     * @param other   : List à affecter
-    * @return la List affectée
+    * @return la List actuelle dans son état après l'affectation
     */
-    List &operator=(const List &other);
+    List &operator=(const List &other) {
+        if (&other != this) {
+            removeAll();
+            appendList(other);
+        }
+        return *this;
+    }
 
     /**
      * Accès à un élément de la liste
@@ -75,7 +163,9 @@ public:
      * @param i : indice de l'élément désiré
      * @return  : le ième élément
      */
-    T operator[](size_t i) const throw(std::out_of_range);
+    T operator[](size_t i) const throw(std::out_of_range) {
+        //at(i);
+    }
 
     /**
      * Accès à un élément modifiable de la liste
@@ -84,37 +174,124 @@ public:
      * @param i : indice de l'élément désiré
      * @return  : le ième élément
      */
-    T &operator[](size_t i) throw(std::out_of_range);
+    T &operator[](size_t i) throw(std::out_of_range) {
+        //at(i);
+    }
+
+
 
     /**
      * @return le nombre d’éléments de la liste,
      */
-    size_t size() const;
+    size_t size() const {
+        return length;
+    }
 
     /**
      * Insère un élément au début de la list
      * @param o : élément à inserer à la début de la List
      */
-    void insert(const T &o);
+    List &insert(const T &o) {
+
+        DataNode *to_insert = new DataNode();
+
+        to_insert->element = o;
+
+        if (head == sentinal) {
+
+            firstAdd(to_insert);
+        } else {
+            head->previous = to_insert;
+            to_insert->next = head;
+            head = to_insert;
+            head->previous = sentinal;
+            sentinal->next = head;
+        }
+        length++;
+        return *this;
+    }
 
     /**
      * Insère un élément à la fin de la List
      * @param o : élément à inserer à la fin de la List
      */
-    void append(const T &o);
+
+    /**
+     * Insère un élément à la fin de la List
+     * @param o : élément à inserer à la fin de la List
+     * @return la liste sur laquelle nous avons opéré le concaténage
+     */
+    List &append(const T &o) {
+
+        DataNode *to_append = new DataNode();
+        to_append->element = o;
+
+        if (tail == sentinal) {
+            firstAdd(to_append);
+        } else {
+            tail->next = to_append;
+            to_append->previous = tail;
+            tail = to_append;
+            tail->next = sentinal;
+            sentinal->previous = tail;
+        }
+        length++;
+
+        return *this;
+    }
 
     /**
      * Supprime l'élément à l'index donné
      *
      * @param index : index de l'élément à supprimer
      */
-    void removeAt(size_t index);
+    void removeAt(size_t index) {
+
+        validIndex(index);
+
+        Node *current_node = head;
+
+        size_t i = 0;
+
+        while (current_node != nullptr) {
+            if (index == i) {
+                if (current_node == head) {
+                    sentinal->previous = nullptr;
+                    sentinal->next = nullptr;
+                    head = reinterpret_cast<DataNode *>(sentinal);
+                    tail = reinterpret_cast<DataNode *>(sentinal);
+                    break;
+                } else if (current_node == tail) {
+                    tail = reinterpret_cast<DataNode *>(current_node->previous);
+                    tail->next = sentinal;
+                    sentinal->previous = tail;
+                } else {
+                    current_node->next->previous = current_node->previous;
+                    current_node->previous->next = current_node->next;
+                }
+
+                head = reinterpret_cast<DataNode *>(sentinal->next);
+                tail = reinterpret_cast<DataNode *>(sentinal->previous) ;
+                delete current_node;
+                break;
+            } else {
+                current_node = current_node->next;
+                i++;
+            }
+        }
+        length--;
+    }
 
     /**
      * Supprime l'élément donné, s'il est dans la List
      * @param o : élément à supprimer
      */
-    void remove(const T &o);
+    void remove(const T &o) {
+
+        int index = find(o);
+        if (index != -1)
+            removeAt(index);
+    }
 
     /**
      * Recherche un élément dans la liste et rendant l’indice du
@@ -127,45 +304,112 @@ public:
      * @return l’indice du
      * premier élément correspondant dans la liste ou, sinon, -1
      */
-    int find(const T &o) const;
+    int find(const T &o) const {
 
-    /**
-     * @return an iterator placed at the beginning of the list
-     */
-    Iterator begin();
+        Iterator tmp = begin();
+        int index = 0;
 
-    /**
-     * @return an iterator placed at the end of the list
-     */
-    Iterator end();
+        while (tmp != nullptr) {
+            if (*tmp == o) {
+                return index;
+            }
+            ++tmp;
 
-    /**
-     * @return an iterator placed at the beginning of the list
-     */
-    Iterator begin() const;
+            index++;
+        }
+        return -1;
+    }
 
-    /**
-     * @return an iterator placed at the end of the list
-     */
-    Iterator end() const;
+    class ConstIterator {
+    protected:
+        ConstIterator() {}
 
+    private:
+        Node *m_node;
+    public:
+
+        ConstIterator(Node *node) : m_node(node) {}
+
+        ConstIterator &operator++() {
+            m_node = m_node->next;
+            return *this;
+        }
+
+        ConstIterator &operator--() {
+            m_node = m_node->previous;
+            return *this;
+        }
+
+        bool operator==(const ConstIterator &o) const {
+            return m_node == o.m_node;
+        }
+
+        bool operator!=(const ConstIterator &o) const {
+            return m_node != o.m_node;
+        }
+
+        const T *operator->() {
+            return &m_node;
+            //return &operator*();
+        }
+
+        const T &operator*() {
+            return reinterpret_cast<DataNode *>(m_node)->element;
+        }
+    };
 
     class Iterator {
+    protected:
+        Iterator() {}
+
     private:
+        Node *m_node;
+
     public:
-        Iterator &operator++();
 
-        bool operator==(const Iterator &o) const;
+        Iterator(Node *node) : m_node(node) {}
 
-        bool operator!=(const Iterator &o) const;
+        Iterator &operator++() throw(std::out_of_range) {
+            m_node = m_node->next;
+            return *this;
+        }
 
-        T &operator*();
+        Iterator &operator--() {
+            m_node = m_node->previous;
+            return *this;
+        }
+
+        bool operator==(const Iterator &o) const {
+            return m_node == o.m_node;
+        }
+
+        bool operator!=(const Iterator &o) const {
+            return m_node != o.m_node;
+        }
+
+        T *operator->() {
+            return &m_node;
+            // return &operator*();
+        }
+
+        T &operator*() {
+            return reinterpret_cast<DataNode *>(m_node)->element;
+        }
     };
 
-    class ConstIterator : public Iterator {
-    private:
-    public:
-    };
+    /**
+     * @return un itérateur placé au début de la liste
+     */
+    Iterator begin() const {
+        return Iterator(head);
+    }
+
+    /**
+     * @return un itérateur placé après la fin de la liste
+     */
+    Iterator end() const {
+        return Iterator(sentinal);
+    }
 
     /**
      *  Affichage dans un flux la liste et son contenu.
@@ -174,16 +418,19 @@ public:
      * @param l : Élément à afficher
      * @return le flux dans lequel afficher la liste et son contenu
      */
-    template<typename U>
     friend
-    std::ostream &operator<<(std::ostream &out, const List<U> &l);
+    std::ostream &operator<<(std::ostream &out, const List<T> &l) {
+        const string arrow = " -> ";
 
+        List<T>::Iterator tmp = l.begin();
 
-    /**
-     *  Affichela liste et son contenu.
-     *
-     */
-    void affiche() const;
+        while (tmp != l.end()) {
+            out << arrow << *tmp;
+            ++tmp;
+        }
+
+        return out;
+    }
 };
 
 

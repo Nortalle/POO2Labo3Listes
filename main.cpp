@@ -13,134 +13,78 @@
 #include <iostream>
 #include <string>
 #include "List.h"
+#include "Person.h"
+#include "Student.h"
 
 using namespace std;
 
 int main() {
-
-    List<string> l;
-
-    /**
-     * Test append
-     */
-    l.append("un");
-    l.append("deux");
-    l.append("trois");
-
-    l.affiche();
-    //cout << l << endl;
-
-    /**
-     * Test append
-     */
-    l.insert("quatre");
-    l.insert("cinq");
-    l.insert("six");
-
-    l.affiche();
-    //cout << l << endl;
-
-    /**
-     * Test find
-     */
-
-    cout << l.find("six") << endl;
-    cout << l.find("cinq") << endl;
-    cout << l.find("quatre") << endl;
-    cout << l.find("un") << endl;
-    cout << l.find("deux") << endl;
-    cout << l.find("trois") << endl;
-    cout << l.find("nicolas") << endl;
-
-    /**
-     * Test remove
-     */
-
-    l.remove("six");
-    l.remove("nicolas");
-
-    l.affiche();
-
-    l.removeAt(3);
-
-    l.affiche();
-    //cout << l << endl;
-
-    List<int> r;
-
-    /**
-     * Test append
-     */
-    r.append(1);
-    r.append(2);
-    r.append(3);
-
-    r.affiche();
-    //cout << l << endl;
-
-    /**
-     * Test append
-     */
-    r.insert(4);
-    r.insert(5);
-    r.insert(6);
-
-    r.affiche();
-    //cout << l << endl;
-
-    /**
-     * Test find
-     */
-
-    cout << r.find(6) << endl;
-    cout << r.find(5) << endl;
-    cout << r.find(4) << endl;
-    cout << r.find(1) << endl;
-    cout << r.find(2) << endl;
-    cout << r.find(3) << endl;
-    cout << r.find(69) << endl;
-
-    /**
-     * Test remove
-     */
-
-    r.remove(6);
-    r.remove(69);
-
-    r.affiche();
-
-    r.removeAt(3);
-
-    r.affiche();
-    //cout << l << endl;
-
-
-    /*
-    for (List::Iterator it = l.begin(); it != l.end(); ++it)
-        cout << *it << " ";
-    cout << endl;
-// Affichage: un deux trois
-
-
-
-
-    /**
-     * Tests donnés dans le labo
-     */
-    /*
     List<string> l;
     l.append("un");
     l.append("deux");
     l.append("trois");
+    cout << 1 << " ";
     for (List<string>::Iterator it = l.begin(); it != l.end(); ++it)
         cout << *it << " ";
     cout << endl;
-// Affichage: un deux trois
-    const List<int> c = {42, 3, 14};
-    for (List<int>::ConstIterator it = --c.end(); it != --c.begin(); --it)
+    //1 un deux trois
+
+    cout << 2 << " ";
+    for (List<string>::Iterator it = --l.end(); it != --l.begin(); --it)
         cout << *it << " ";
     cout << endl;
-// Affichage: 14 3 42
-*/
+    //2 trois deux un
+
+    List<Person *> persons;
+
+    Person *jean = new Person("Jean");
+
+    persons.insert(jean);
+    persons.insert(new Student("Paul", "IL"));
+    persons.insert(new Person("Jacques"));
+
+    cout << 3 << " ";
+    for (List<Person *>::Iterator it = persons.begin(); it != persons.end(); ++it) {
+        (*it)->display();
+        cout << ", ";
+    }
+    cout << endl;
+    //3 Person : Jacques , Student : Paul, IL , Person : Jean ,
+
+    List<Person *> personsCopy;
+    personsCopy = persons;
+
+    cout << 4 << " ";
+    cout << personsCopy << endl;
+    //4  -> 0x3256e40 -> 0x3256de8 -> 0x3256da8 (du moins des pointeurs
+    //Comme dit dans le mail à M. Nanchen
+    persons.remove(jean);
+
+    cout << 5 << " ";
+    cout << persons << endl;
+    //5  -> 0x31e6e40 -> 0x31e6de8
+
+    cout << 6 << " ";
+    cout << personsCopy << endl;
+    //6  -> 0x3256e40 -> 0x3256de8 -> 0x3256da8
+
+    cout << 7 << " ";
+    List<string> en = {"one", "two", "tree", "apple"};
+    cout << en << endl;
+    //7  -> one -> two -> tree -> apple
+
+    List<string> te = {"truck", "blade", "support", "tip"};
+
+    en = te;
+
+    cout << 8 << " ";
+    cout << en << endl;
+    //8  -> one -> two -> tree -> apple
+
+    List<int> videNeDevraitPasPlanter;
+    cout << videNeDevraitPasPlanter << endl;
+
+
+
     return EXIT_SUCCESS;
 }
