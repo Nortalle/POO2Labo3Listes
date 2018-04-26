@@ -40,8 +40,8 @@ int main() {
     Person *jean = new Person("Jean");
 
     persons.insert(jean);
-    persons.insert(new Student("Paul", "IL"));
-    persons.insert(new Person("Jacques"));
+    persons.insert(new Student("Nicolas", "Chill"));
+    persons.insert(new Person("Pierre"));
 
     cout << 3 << " ";
     for (List<Person *>::Iterator it = persons.begin(); it != persons.end(); ++it) {
@@ -81,9 +81,9 @@ int main() {
     cout << en << endl;
     //8  -> one -> two -> tree -> apple
 
-    List<int> videNeDevraitPasPlanter;
+    const List<int> videNeDevraitPasPlanter;
     cout << videNeDevraitPasPlanter << endl;
-
+    //videNeDevraitPasPlanter.insert(3); ne compile pas, liste constante
 
 
     return EXIT_SUCCESS;

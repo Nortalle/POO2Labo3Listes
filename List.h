@@ -7,7 +7,8 @@
 
  Goal        :
 
- Compiler    :
+ Compiler    : Tout se trouve dans le .h, car nous avons vu en cours
+                que du moment que ça touchait la générécité, un .h suffisait
  ------------------------------------------------------------------------------
 */
 
@@ -133,7 +134,7 @@ public:
     List(std::initializer_list<T> args) : List() {
 
         for (const T *val = args.begin(); val != args.end(); ++val) {
-            append(*val);
+            insert(*val);
         }
     }
 /*
@@ -191,7 +192,7 @@ public:
      * Insère un élément au début de la list
      * @param o : élément à inserer à la début de la List
      */
-    List &insert(const T &o) {
+    List &insert(const T &o){
 
         DataNode *to_insert = new DataNode();
 
@@ -348,12 +349,12 @@ public:
             return m_node != o.m_node;
         }
 
-        const T *operator->() {
+        const T *operator->() const {
             return &m_node;
             //return &operator*();
         }
 
-        const T &operator*() {
+        const T &operator*() const {
             return reinterpret_cast<DataNode *>(m_node)->element;
         }
     };
@@ -419,7 +420,7 @@ public:
      * @return le flux dans lequel afficher la liste et son contenu
      */
     friend
-    std::ostream &operator<<(std::ostream &out, const List<T> &l) {
+    std::ostream &operator<<(std::ostream &out, const List<T> &l)  {
         const string arrow = " -> ";
 
         List<T>::Iterator tmp = l.begin();
