@@ -5,10 +5,15 @@
  Author(s)   : Guillaume Hochet et Vincent Guidoux
  Date        : 25.04.2018
 
- Goal        :
+ Goal        : Implémente une liste circulaire avec une sentinelle comme le
+               fait la stl. Nous permettons donc à l'utlilisateur de faire
+               (--(--begin()). C'est un choix d'implémentation comme un autre.
 
- Compiler    : Tout se trouve dans le .h, car nous avons vu en cours
-                que du moment que ça touchait la générécité, un .h suffisait
+               Elle propose deux iterateurs, un constant et un non-constant.
+
+ commentaires : Tout se trouve dans le .h, car nous avons vu en cours
+                que du moment où ça touchait la générécité, un .h suffisait
+                Nous avons décidé d'implémenter une liste circulaire.
  ------------------------------------------------------------------------------
 */
 
@@ -26,7 +31,6 @@ using namespace std;
 template<typename T>
 class List {
 private:
-
     struct Node {
         Node *previous;
         Node *next;
@@ -40,9 +44,13 @@ private:
         }
     };
 
+    //pointe sur le début de la liste
     DataNode *head;
+
+    //pointe sur la fin de la liste
     DataNode *tail;
 
+    //Taille de la liste
     size_t length;
 
     //used for --begin() and end()
@@ -55,7 +63,6 @@ private:
         while (length != 0) {
             removeAt(0);
         }
-
     }
 
     /**
@@ -64,10 +71,18 @@ private:
      * @param list : liste à rajouter à la fin de la liste actuelle
      */
     void appendList(const List &list) {
-        for (Iterator it = list.begin(); it != list.end(); ++it)
+        ConstIterator endit = list.cend();
+        for (ConstIterator it = list.cbegin(); it != endit; ++it) {
             append(*it);
+        }
     }
 
+    /**
+     * Lorsque nous ajontons un nouvel élément à une liste vide
+     * ce code est nécessaire
+     *
+     * @param to_add : noeuds à ajouter à la liste
+     */
     void firstAdd(DataNode *to_add) {
         head = to_add;
 
@@ -90,8 +105,15 @@ private:
         }
     }
 
-
-    T at(size_t i){
+    /**
+     * Retourne une référence sur l'élément du noeuds à
+     * l'index donné
+     *
+     * @param i : index du noeuds à retournr
+     * @return l'objet à retourner
+     */
+    T &at(size_t i) {
+        validIndex(i);
         Iterator tmp = begin();
         int index = 0;
 
@@ -100,10 +122,29 @@ private:
                 return *tmp;
             }
             ++tmp;
-
             index++;
         }
-        return -1;
+    }
+
+    /**
+     * Retourne une copie  sur l'élément du noeuds à
+     * l'index donné
+     *
+     * @param i : index du noeuds à retournr
+     * @return l'objet à retourner
+     */
+    T at(size_t i) const {
+        validIndex(i);
+        ConstIterator tmp = cbegin();
+        int index = 0;
+
+        while (tmp != nullptr) {
+            if (index == i) {
+                return *tmp;
+            }
+            ++tmp;
+            index++;
+        }
     }
 
 public:
@@ -114,7 +155,6 @@ public:
         head = (reinterpret_cast<DataNode *>(sentinal));
         tail = (reinterpret_cast<DataNode *>(sentinal));
     }
-
 
     /**
      * Constructeur de copie
@@ -132,17 +172,21 @@ public:
      * @param args : liste d'initialisateurs
      */
     List(std::initializer_list<T> args) : List() {
-
-        for (const T *val = args.begin(); val != args.end(); ++val) {
-            insert(*val);
+        //nous sortons le end() pour un soucis d'efficacité.
+        const T *endit = args.end();
+        for (const T *val = args.begin(); val != endit; ++val) {
+            append(*val);
         }
     }
-/*
+
+    /**
+     * Destructeur
+     */
     ~List() {
         removeAll();
         delete sentinal;
     }
-*/
+
     /**
     * Opréateur d'affectation
     *
@@ -165,7 +209,7 @@ public:
      * @return  : le ième élément
      */
     T operator[](size_t i) const throw(std::out_of_range) {
-        //at(i);
+        at(i);
     }
 
     /**
@@ -176,10 +220,8 @@ public:
      * @return  : le ième élément
      */
     T &operator[](size_t i) throw(std::out_of_range) {
-        //at(i);
+        at(i);
     }
-
-
 
     /**
      * @return le nombre d’éléments de la liste,
@@ -192,12 +234,13 @@ public:
      * Insère un élément au début de la list
      * @param o : élément à inserer à la début de la List
      */
-    List &insert(const T &o){
+    List &insert(const T &o) {
 
         DataNode *to_insert = new DataNode();
 
         to_insert->element = o;
 
+        //est-ce que la liste est vide ?
         if (head == sentinal) {
 
             firstAdd(to_insert);
@@ -215,11 +258,6 @@ public:
     /**
      * Insère un élément à la fin de la List
      * @param o : élément à inserer à la fin de la List
-     */
-
-    /**
-     * Insère un élément à la fin de la List
-     * @param o : élément à inserer à la fin de la List
      * @return la liste sur laquelle nous avons opéré le concaténage
      */
     List &append(const T &o) {
@@ -227,6 +265,7 @@ public:
         DataNode *to_append = new DataNode();
         to_append->element = o;
 
+        //est-ce que la liste est vide ?
         if (tail == sentinal) {
             firstAdd(to_append);
         } else {
@@ -246,12 +285,10 @@ public:
      *
      * @param index : index de l'élément à supprimer
      */
-    void removeAt(size_t index) {
+    void removeAt(size_t index)  throw(std::out_of_range) {
 
         validIndex(index);
-
         Node *current_node = head;
-
         size_t i = 0;
 
         while (current_node != nullptr) {
@@ -272,7 +309,7 @@ public:
                 }
 
                 head = reinterpret_cast<DataNode *>(sentinal->next);
-                tail = reinterpret_cast<DataNode *>(sentinal->previous) ;
+                tail = reinterpret_cast<DataNode *>(sentinal->previous);
                 delete current_node;
                 break;
             } else {
@@ -284,14 +321,16 @@ public:
     }
 
     /**
-     * Supprime l'élément donné, s'il est dans la List
+     * Supprime  la première occurance de l'élément donné,
+     * s'il est dans la List
      * @param o : élément à supprimer
      */
     void remove(const T &o) {
 
         int index = find(o);
-        if (index != -1)
+        if (index != -1) {
             removeAt(index);
+        }
     }
 
     /**
@@ -307,7 +346,7 @@ public:
      */
     int find(const T &o) const {
 
-        Iterator tmp = begin();
+        ConstIterator tmp = cbegin();
         int index = 0;
 
         while (tmp != nullptr) {
@@ -321,78 +360,142 @@ public:
         return -1;
     }
 
+    /**
+     * Classe ConstIterator, est un itérateur qui lorsqu'il donne accès
+     * à l' élément de l'itérateur, ne permet pas de les modifier
+     */
     class ConstIterator {
-    protected:
-        ConstIterator() {}
-
     private:
+        //noeuds courant
         Node *m_node;
     public:
 
+        /**
+         * Constructeur
+         * @param node : noeuds sur lequel pointer
+         */
         ConstIterator(Node *node) : m_node(node) {}
 
+        /**
+         * Mets l'itérteur sur le noeuds suivant
+         *
+         * @return un itérateur sur l'élément suivant
+         */
         ConstIterator &operator++() {
             m_node = m_node->next;
             return *this;
         }
 
+        /**
+         *  Mets l'itérteur sur le noeuds précédant
+         *
+         * @return un itérateur sur l'élément précédant
+         */
         ConstIterator &operator--() {
             m_node = m_node->previous;
             return *this;
         }
 
+        /**
+         * @param o :  iterateur à comparer
+         * @return si les iterateurs sont égaux
+         */
         bool operator==(const ConstIterator &o) const {
             return m_node == o.m_node;
         }
 
+        /**
+        * @param o :  iterateur à comparer
+        * @return si les iterateurs ne sont pas égaux
+        */
         bool operator!=(const ConstIterator &o) const {
             return m_node != o.m_node;
         }
 
+        /**
+         * @return  accès aux méthodes et aux attributs
+         *              de l'élément courant pas modifiable
+         */
         const T *operator->() const {
-            return &m_node;
-            //return &operator*();
+            return &operator*();
         }
 
+        /**
+        * @return accès à l'élément courant, sans la possibilité de le modifié
+        */
         const T &operator*() const {
             return reinterpret_cast<DataNode *>(m_node)->element;
         }
     };
 
+    /**
+    * Classe Iterator, est un itérateur qui lorsqu'il donne accès
+    * à l' élément de l'itérateur,  permet  de les modifier
+    */
     class Iterator {
-    protected:
-        Iterator() {}
-
     private:
+        //noeuds courant
         Node *m_node;
 
     public:
 
+        /**
+         * Constructeur
+         * @param node : noeuds sur lequel pointer
+         */
         Iterator(Node *node) : m_node(node) {}
 
-        Iterator &operator++() throw(std::out_of_range) {
+        /**
+         * Mets l'itérteur sur le noeuds suivant
+         *
+         * @return un itérateur sur l'élément suivant
+         */
+        Iterator &operator++() {
             m_node = m_node->next;
             return *this;
         }
 
+        /**
+         *  Mets l'itérteur sur le noeuds précédant
+         *
+         * @return un itérateur sur l'élément précédant
+         */
         Iterator &operator--() {
             m_node = m_node->previous;
             return *this;
         }
 
+        /**
+         * @param o :  iterateur à comparer
+         * @return si les iterateurs sont égaux
+         */
         bool operator==(const Iterator &o) const {
             return m_node == o.m_node;
         }
 
+        /**
+         * @param o :  iterateur à comparer
+         * @return si les iterateurs ne sont pas égaux
+         */
         bool operator!=(const Iterator &o) const {
             return m_node != o.m_node;
         }
 
+        /**
+         * @return  accès aux méthodes et aux attributs
+         *              de l'élément courant pas
+         *
+         * (retourne un pointeur et non une référence,
+         *  nulle part dans nos recherches sur internet le
+         *  retour d'une référence est faite)
+         */
         T *operator->() {
-            return &m_node;
-            // return &operator*();
+            return &operator*();
         }
 
+        /**
+        * @return accès à l'élément courant, sans la possibilité de le modifié
+        */
         T &operator*() {
             return reinterpret_cast<DataNode *>(m_node)->element;
         }
@@ -413,6 +516,20 @@ public:
     }
 
     /**
+     * @return un itérateur placé au début de la liste
+     */
+    ConstIterator cbegin() const {
+        return ConstIterator(head);
+    }
+
+    /**
+     * @return un itérateur placé après la fin de la liste
+     */
+    ConstIterator cend() const {
+        return ConstIterator(sentinal);
+    }
+
+    /**
      *  Affichage dans un flux la liste et son contenu.
      *
      * @param out : flux dans lequel afficher la liste et son contenu
@@ -420,7 +537,7 @@ public:
      * @return le flux dans lequel afficher la liste et son contenu
      */
     friend
-    std::ostream &operator<<(std::ostream &out, const List<T> &l)  {
+    std::ostream &operator<<(std::ostream &out, const List<T> &l) {
         const string arrow = " -> ";
 
         List<T>::Iterator tmp = l.begin();
@@ -429,10 +546,8 @@ public:
             out << arrow << *tmp;
             ++tmp;
         }
-
         return out;
     }
 };
-
 
 #endif //POO2LABO3LISTES_LIST_H
